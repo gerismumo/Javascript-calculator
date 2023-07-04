@@ -1,85 +1,55 @@
 $(document).ready(function() {
-    var display = $('#display');
-    var currentNumber = "";
-    var operator = "";
-    var previousResult = 0;
-    var shouldClearDisplay = false;
-  
+    // Click event for number buttons
     $('.number').click(function() {
-      if (shouldClearDisplay) {
-        currentNumber = "";
-        shouldClearDisplay = false;
-      }
-      if (!currentNumber.startsWith("0") || currentNumber.indexOf(".") !== -1) {
-        currentNumber += $(this).val();
-      }
-      display.text(currentNumber);
+      var num = $(this).val();
+      insert(num);
     });
-  
+    
+    // Click event for operator buttons
     $('.operator').click(function() {
-      if (currentNumber !== "") {
-        if (operator === "") {
-          previousResult = parseFloat(currentNumber);
-        } else {
-          if (operator === "=") {
-            operator = $(this).val(); // Reset the operator if it's "="
-            previousResult = parseFloat(currentNumber);
-          } else {
-            previousResult = calculate(previousResult, parseFloat(currentNumber), operator);
-            display.text(previousResult);
-          }
-        }
-      }
-      operator = $(this).val();
-      shouldClearDisplay = true;
+      var operator = $(this).val();
+      insert(operator);
     });
-  
-    $('#decimal').click(function() {
-      if (shouldClearDisplay) {
-        currentNumber = "0.";
-        shouldClearDisplay = false;
-      } else if (currentNumber.indexOf(".") === -1) {
-        currentNumber += ".";
-      }
-      display.text(currentNumber);
-    });
-  
-    $('#clear').click(function() {
-      currentNumber = "";
-      operator = "";
-      previousResult = 0;
-      shouldClearDisplay = false;
-      display.text("0");
-    });
-  
+    
+    // Click event for equals button
     $('#equals').click(function() {
-      if (operator !== "") {
-        if (operator === "=") {
-          operator = $(this).val(); 
-          previousResult = parseFloat(currentNumber);
-        } else {
-          var result = calculate(previousResult, parseFloat(currentNumber), operator);
-          display.text(result);
-          previousResult = result;
-          operator = "";
-        }
-        shouldClearDisplay = true;
-      } else {
-        display.text("Invalid expression");
-      }
+      equal();
     });
-  
-    function calculate(num1, num2, operator) {
-      if (operator === "+") {
-        return num1 + num2;
-      } else if (operator === "-") {
-        return num1 - num2;
-      } else if (operator === "*") {
-        return num1 * num2;
-      } else if (operator === "/") {
-        return num1 / num2;
-      } else {
-        return num2;
-      }
-    }
+    
+    // Click event for clear button
+    $('#clear').click(function() {
+      ac();
+    });
+    
+    // Click event for delete button
+    $('#delete').click(function() {
+      del();
+    });
   });
+  
+  // Function to insert a value into the display
+  function insert(num) {
+    var displayVal = $('#display').val();
+    displayVal += num;
+    $('#display').val(displayVal);
+  }
+  
+  // Function to evaluate the expression and display the result
+  function equal() {
+    var displayVal = $('#display').val();
+    var result = eval(displayVal);
+    $('#display').val(result);
+  }
+  
+  // Function to clear the display
+  function ac() {
+    $('#display').val('0');
+  }
+  
+  // Function to delete the last character from the display
+  function del() {
+    var displayVal = $('#display').val();
+    displayVal = displayVal.slice(0, -1);
+    $('#display').val(displayVal);
+  }
+  
